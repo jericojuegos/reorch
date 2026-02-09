@@ -49,9 +49,9 @@
 - [ ] Connect to PostgreSQL
 
 ### Worker Scaffolding
-- [ ] Create worker skeleton in `packages/worker/`
-- [ ] Redis queue connection
-- [ ] Job polling loop skeleton
+- [x] Create worker skeleton in `packages/worker/`
+- [x] Redis queue connection
+- [x] Job polling loop skeleton
 
 ### Docker Environment
 - [ ] Create `docker-compose.yml` with:
