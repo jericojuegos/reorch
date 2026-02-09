@@ -1,12 +1,12 @@
-# ⚡ Active Sprint: Phase 0 — Foundation
+# ⚡ Active Sprint: Phase 1 — MVP Re-Orchestration Core
 
-> **Objective:** Establish a stable, scalable backbone for audio jobs.
-> **Context:** See [00-roadmap.md](./00-roadmap.md#-phase-0-foundation-pre-mvp) and [specify.md](./specify.md)
+> **Objective:** Deliver a usable and reliable song transformation pipeline.
+> **Context:** See [00-roadmap.md](./00-roadmap.md#-phase-1-mvp--re-orchestration-core)
 
 ## 🚨 Critical Rules for This Sprint
-* **Do NOT** build any audio processing logic yet — that's Phase 1.
-* **MUST** use monorepo structure (`apps/`, `packages/`).
-* **MUST** containerize all services (Docker Compose).
+* **Focus on end-to-end flow** — Upload → Process → Download must work.
+* **Single preset only** — Ballad → Rock transformation.
+* **No stem separation yet** — Full-track processing only (Phase 2).
 * **Update:** Mark tasks as `[x]` immediately upon verification.
 
 ---
@@ -14,52 +14,40 @@
 ## 🔄 Current Task (The Focus)
 *The AI should only look here for the next step.*
 
-- [x] **Project Initialization**
-    - [x] Initialize Git repo with `git init`
-    - [x] Create monorepo structure:
-      ```
-      reorch/
-      ├── apps/
-      │   ├── web/          # Next.js frontend
-      │   └── api/          # FastAPI backend
-      ├── packages/
-      │   └── worker/       # Python audio pipeline worker
-      ├── docker/
-      │   └── docker-compose.yml
-      └── .env.example
-      ```
-    - [x] Create root `README.md` with project overview
-    - [x] Create `.gitignore` for Python + Node
-    - [x] **Verify:** `git status` shows clean structure
+- [ ] **Database Schema & Models**
+    - [ ] Create PostgreSQL schema for jobs, projects, tracks
+    - [ ] Add SQLAlchemy models to API
+    - [ ] Implement job lifecycle (queued → running → succeeded/failed)
+    - [ ] Add database migrations with Alembic
+    - [ ] **Verify:** API can create/read jobs from database
 
 ---
 
 ## ⏳ Upcoming Tasks (On Deck)
-*Queue for when the Current Task is done.*
 
-### Frontend Scaffolding
-- [x] Scaffold Next.js app in `apps/web/`
-- [x] Install Tailwind CSS + shadcn/ui
-- [x] Create placeholder landing page
+### Track Upload & Storage
+- [ ] Implement file upload endpoint (`POST /tracks`)
+- [ ] Validate file type (WAV/MP3) and size limits
+- [ ] Upload to MinIO S3 bucket
+- [ ] Create track record in database
 
-### Backend Scaffolding
-- [x] Scaffold FastAPI app in `apps/api/`
-- [x] Add health check endpoint (`GET /health`)
-- [x] Environment config with `.env` schema
-- [ ] Connect to PostgreSQL
+### Job Queue Integration
+- [ ] API enqueues jobs to Redis
+- [ ] Worker polls and claims jobs
+- [ ] Update job status in database
+- [ ] Progress reporting (percentage)
 
-### Worker Scaffolding
-- [x] Create worker skeleton in `packages/worker/`
-- [x] Redis queue connection
-- [x] Job polling loop skeleton
+### Audio Processing Pipeline
+- [ ] FFmpeg canonicalization (convert to WAV 44.1kHz 16-bit)
+- [ ] Basic analysis (tempo/BPM, duration)
+- [ ] Ballad → Rock preset (EQ, compression, saturation)
+- [ ] Loudness normalization (LUFS)
+- [ ] Final render (MP3 + WAV)
 
-### Docker Environment
-- [x] Create `docker-compose.yml` with:
-  - PostgreSQL 15
-  - Redis 7
-  - API service
-  - Worker service
-- [ ] Test `docker-compose up` successfully starts all services
+### Frontend Integration
+- [ ] Upload track UI
+- [ ] Job progress display
+- [ ] Download result button
 
 ---
 
@@ -69,6 +57,4 @@
 ---
 
 ## 📝 Activity Log
-- `2026-02-09` **Project Initialization completed** — monorepo structure, README, .gitignore, .env.example, docker-compose.yml.
-- `2026-02-09` Consolidated project specification from ChatGPT reference.
-- `2026-02-09` Aligned `.agent/` directory structure with template.
+- `2026-02-09` Phase 1 sprint started after Phase 0 completion.

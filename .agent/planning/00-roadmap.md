@@ -12,28 +12,28 @@
 
 ---
 
-## 🚀 Phase 0: Foundation (Pre-MVP)
+## ✅ Phase 0: Foundation (Pre-MVP) — COMPLETE
 *Goal: Establish a stable, scalable backbone for audio jobs.*
 
 ### Infrastructure
-- [ ] Monorepo structure finalized
-- [ ] Next.js frontend scaffolded
-- [ ] FastAPI backend scaffolded
-- [ ] Worker service initialized (separate process)
-- [ ] PostgreSQL schema created
-- [ ] Redis job queue wired
-- [ ] S3-compatible storage configured
-- [ ] Docker-based local dev environment
+- [x] Monorepo structure finalized
+- [x] Next.js frontend scaffolded
+- [x] FastAPI backend scaffolded
+- [x] Worker service initialized (separate process)
+- [ ] PostgreSQL schema created *(deferred to Phase 1)*
+- [x] Redis job queue wired
+- [x] S3-compatible storage configured
+- [x] Docker-based local dev environment
 
 ### Core Concepts
-- [ ] Job lifecycle model (queued → running → succeeded/failed)
-- [ ] Track ingestion & canonicalization (FFmpeg)
-- [ ] Preset-based processing config ("recipes")
-- [ ] Progress checkpoints & logging
+- [ ] Job lifecycle model (queued → running → succeeded/failed) *(Phase 1)*
+- [ ] Track ingestion & canonicalization (FFmpeg) *(Phase 1)*
+- [ ] Preset-based processing config ("recipes") *(Phase 1)*
+- [ ] Progress checkpoints & logging *(Phase 1)*
 
 ---
 
-## 🏗️ Phase 1: MVP — Re-Orchestration Core
+## [>] 🏗️ Phase 1: MVP — Re-Orchestration Core
 *Goal: Deliver a usable and reliable song transformation pipeline.*
 
 ### Audio Pipeline (MVP Quality)
