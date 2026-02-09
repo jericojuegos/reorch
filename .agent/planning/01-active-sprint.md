@@ -38,9 +38,9 @@
 *Queue for when the Current Task is done.*
 
 ### Frontend Scaffolding
-- [ ] Scaffold Next.js app in `apps/web/`
-- [ ] Install Tailwind CSS + shadcn/ui
-- [ ] Create placeholder landing page
+- [x] Scaffold Next.js app in `apps/web/`
+- [x] Install Tailwind CSS + shadcn/ui
+- [x] Create placeholder landing page
 
 ### Backend Scaffolding
 - [ ] Scaffold FastAPI app in `apps/api/`
