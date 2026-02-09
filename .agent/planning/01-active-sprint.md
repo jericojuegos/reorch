@@ -54,7 +54,7 @@
 - [x] Job polling loop skeleton
 
 ### Docker Environment
-- [ ] Create `docker-compose.yml` with:
+- [x] Create `docker-compose.yml` with:
   - PostgreSQL 15
   - Redis 7
   - API service
