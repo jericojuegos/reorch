@@ -13,7 +13,7 @@ COPY main.py .
 COPY config.py .
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -e .
+RUN pip install --no-cache-dir .
 
 # Expose port
 EXPOSE 8000

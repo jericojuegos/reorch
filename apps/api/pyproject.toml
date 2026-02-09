@@ -12,6 +12,9 @@ dependencies = [
     "pydantic-settings>=2.0.0",
 ]
 
+[tool.setuptools]
+py-modules = ["main", "config"]
+
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0.0",

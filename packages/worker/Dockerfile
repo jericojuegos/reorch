@@ -9,7 +9,7 @@ COPY config.py .
 COPY queue_client.py .
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -e .
+RUN pip install --no-cache-dir .
 
 # Health check (worker is alive if process is running)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
