@@ -1,0 +1,133 @@
+# 🗺️ REORCH Roadmap
+
+> **Vision:** The premier AI-assisted platform for professional music re-orchestration and genre transformation.
+> **North Star:** Users can seamlessly upload a track and transform its genre with incrementally better quality at each phase.
+
+## 📌 Legend
+- `[x]` Completed
+- `[ ]` Pending
+- `[>]` **Current Focus** (Active Phase)
+- `[-]` Skipped/Deferred
+- `[!]` Blocked
+
+---
+
+## 🚀 Phase 0: Foundation (Pre-MVP)
+*Goal: Establish a stable, scalable backbone for audio jobs.*
+
+### Infrastructure
+- [ ] Monorepo structure finalized
+- [ ] Next.js frontend scaffolded
+- [ ] FastAPI backend scaffolded
+- [ ] Worker service initialized (separate process)
+- [ ] PostgreSQL schema created
+- [ ] Redis job queue wired
+- [ ] S3-compatible storage configured
+- [ ] Docker-based local dev environment
+
+### Core Concepts
+- [ ] Job lifecycle model (queued → running → succeeded/failed)
+- [ ] Track ingestion & canonicalization (FFmpeg)
+- [ ] Preset-based processing config ("recipes")
+- [ ] Progress checkpoints & logging
+
+---
+
+## 🏗️ Phase 1: MVP — Re-Orchestration Core
+*Goal: Deliver a usable and reliable song transformation pipeline.*
+
+### Audio Pipeline (MVP Quality)
+- [ ] Upload audio (WAV/MP3)
+- [ ] Convert to canonical WAV format
+- [ ] Basic analysis (tempo/BPM, duration)
+- [ ] One transformation preset: **Ballad → Rock**
+- [ ] Full-track (non-stem) processing: EQ, compression, saturation, loudness normalization
+- [ ] Final render (MP3 + WAV)
+
+### Product Features
+- [ ] Create project
+- [ ] Upload track
+- [ ] Start re-orchestration job
+- [ ] View job progress
+- [ ] Download result
+
+### Guardrails
+- [ ] File size & duration limits
+- [ ] Retry & timeout rules
+- [ ] Clear failure messages
+
+---
+
+## 💅 Phase 2: V1 — Quality Upgrade & Usability
+*Goal: Improve musical quality and user control.*
+
+### Audio Enhancements
+- [ ] Stem separation (vocals / drums / bass / other)
+- [ ] Stem-aligned time-stretch
+- [ ] Improved drum energy for rock presets
+- [ ] Better low-end control (bass)
+- [ ] Cleaner vocal presence
+- [ ] Improved mastering chain (LUFS + true peak)
+
+### Presets
+- [ ] Ballad → Rock (improved)
+- [ ] Acoustic → Pop Punk
+- [ ] Chill → Upbeat
+
+### UX
+- [ ] Preset intensity slider
+- [ ] Job history per project
+- [ ] Output comparison (original vs re-orch)
+- [ ] Optional stem export (ZIP)
+
+---
+
+## 🎤 Phase 3: Song Generation (Create Mode)
+*Goal: Add controlled song generation without compromising REORCH's identity.*
+
+### Generation Pipeline
+- [ ] Prompt-based song generation (API or self-hosted)
+- [ ] Optional lyrics input
+- [ ] Duration limits & style tags
+- [ ] Generation jobs use same queue + storage system
+
+### Workflow
+- [ ] Generate → Re-Orchestrate → Export
+- [ ] Re-use re-orch presets on generated songs
+
+### Cost Control
+- [ ] Credit-based usage
+- [ ] Generation priced higher than re-orch
+- [ ] Per-user concurrency limits
+
+---
+
+## 🤖 Phase 4: AI Agent Layer (Optional, High ROI)
+*Goal: Improve creative decision-making and output consistency.*
+
+### Producer Agent
+- [ ] Converts user intent into a structured "recipe"
+- [ ] Selects presets, intensity, mix targets
+- [ ] Outputs strict JSON only
+
+### QA / Refinement Agent
+- [ ] Reviews metrics (LUFS, clipping, duration)
+- [ ] Triggers optional second-pass refinement
+
+### Safety
+- [ ] Cost-aware planning
+- [ ] Allowed parameter ranges enforced
+- [ ] No direct DSP execution by agents
+
+---
+
+## 🧊 Icebox (Future Ideas)
+*Tasks we might do later, but not for MVP.*
+- [ ] Advanced structure detection (sections, fills, drops)
+- [ ] Arrangement-level variation
+- [ ] Multi-version batch export
+- [ ] API access for developers
+- [ ] Plugin / integration clients (WordPress, DAWs)
+- [ ] WebSocket job updates
+- [ ] Email notifications
+- [ ] Preset marketplace
