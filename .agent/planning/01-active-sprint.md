@@ -43,9 +43,9 @@
 - [x] Create placeholder landing page
 
 ### Backend Scaffolding
-- [ ] Scaffold FastAPI app in `apps/api/`
-- [ ] Add health check endpoint (`GET /health`)
-- [ ] Environment config with `.env` schema
+- [x] Scaffold FastAPI app in `apps/api/`
+- [x] Add health check endpoint (`GET /health`)
+- [x] Environment config with `.env` schema
 - [ ] Connect to PostgreSQL
 
 ### Worker Scaffolding
