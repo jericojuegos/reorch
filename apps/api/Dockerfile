@@ -11,6 +11,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY pyproject.toml .
 COPY main.py .
 COPY config.py .
+COPY models.py .
+COPY database.py .
+COPY routers/ ./routers/
 
 # Install Python dependencies
 RUN pip install --no-cache-dir .

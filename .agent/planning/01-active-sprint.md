@@ -14,10 +14,10 @@
 ## 🔄 Current Task (The Focus)
 *The AI should only look here for the next step.*
 
-- [ ] **Database Schema & Models**
-    - [ ] Create PostgreSQL schema for jobs, projects, tracks
-    - [ ] Add SQLAlchemy models to API
-    - [ ] Implement job lifecycle (queued → running → succeeded/failed)
+- [/] **Database Schema & Models**
+    - [x] Create PostgreSQL schema for jobs, projects, tracks
+    - [x] Add SQLAlchemy models to API
+    - [x] Implement job lifecycle (queued → running → succeeded/failed)
     - [ ] Add database migrations with Alembic
     - [ ] **Verify:** API can create/read jobs from database
 
