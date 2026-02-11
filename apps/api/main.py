@@ -6,14 +6,11 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from database import init_db
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan events."""
-    # Startup: Initialize database tables
-    await init_db()
+    # Startup: Database migrations should be run separately via Alembic
     yield
     # Shutdown: Cleanup if needed
 

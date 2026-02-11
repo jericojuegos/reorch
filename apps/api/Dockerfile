@@ -14,6 +14,8 @@ COPY config.py .
 COPY models.py .
 COPY database.py .
 COPY routers/ ./routers/
+COPY alembic.ini .
+COPY alembic/ ./alembic/
 
 # Install Python dependencies
 RUN pip install --no-cache-dir .

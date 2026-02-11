@@ -14,12 +14,12 @@
 ## 🔄 Current Task (The Focus)
 *The AI should only look here for the next step.*
 
-- [/] **Database Schema & Models**
+- [x] **Database Schema & Models**
     - [x] Create PostgreSQL schema for jobs, projects, tracks
     - [x] Add SQLAlchemy models to API
     - [x] Implement job lifecycle (queued → running → succeeded/failed)
-    - [ ] Add database migrations with Alembic
-    - [ ] **Verify:** API can create/read jobs from database
+    - [x] Add database migrations with Alembic
+    - [x] **Verify:** API can create/read jobs from database
 
 ---
 
@@ -57,4 +57,5 @@
 ---
 
 ## 📝 Activity Log
+- `2026-02-11` Database Schema & Models completed. Alembic migrations set up, verified upgrade/downgrade cycle and API CRUD.
 - `2026-02-09` Phase 1 sprint started after Phase 0 completion.
