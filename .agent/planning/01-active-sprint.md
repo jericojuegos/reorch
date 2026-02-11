@@ -14,22 +14,15 @@
 ## 🔄 Current Task (The Focus)
 *The AI should only look here for the next step.*
 
-- [x] **Database Schema & Models**
-    - [x] Create PostgreSQL schema for jobs, projects, tracks
-    - [x] Add SQLAlchemy models to API
-    - [x] Implement job lifecycle (queued → running → succeeded/failed)
-    - [x] Add database migrations with Alembic
-    - [x] **Verify:** API can create/read jobs from database
+- [ ] **Track Upload & Storage**
+    - [ ] Implement file upload endpoint (`POST /tracks`)
+    - [ ] Validate file type (WAV/MP3) and size limits
+    - [ ] Upload to MinIO S3 bucket
+    - [ ] Create track record in database
 
 ---
 
 ## ⏳ Upcoming Tasks (On Deck)
-
-### Track Upload & Storage
-- [ ] Implement file upload endpoint (`POST /tracks`)
-- [ ] Validate file type (WAV/MP3) and size limits
-- [ ] Upload to MinIO S3 bucket
-- [ ] Create track record in database
 
 ### Job Queue Integration
 - [ ] API enqueues jobs to Redis
