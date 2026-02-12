@@ -33,10 +33,11 @@ app.add_middleware(
 
 
 # Import and include routers
-from routers import jobs, projects
+from routers import jobs, projects, tracks
 
 app.include_router(projects.router, prefix="/projects", tags=["Projects"])
 app.include_router(jobs.router, prefix="/jobs", tags=["Jobs"])
+app.include_router(tracks.router, prefix="/tracks", tags=["Tracks"])
 
 
 @app.get("/health")
