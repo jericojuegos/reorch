@@ -11,21 +11,18 @@
 
 ---
 
-- [x] **Track Upload & Storage**
-    - [x] Implement file upload endpoint (`POST /tracks`)
-    - [x] Validate file type (WAV/MP3) and size limits
-    - [x] Upload to MinIO S3 bucket
-    - [x] Create track record in database
+## 🔄 Current Task (The Focus)
+*The AI should only look here for the next step.*
+
+- [ ] **Job Queue Integration**
+    - [ ] API enqueues jobs to Redis
+    - [ ] Worker polls and claims jobs
+    - [ ] Update job status in database
+    - [ ] Progress reporting (percentage)
 
 ---
 
 ## ⏳ Upcoming Tasks (On Deck)
-
-### Job Queue Integration
-- [ ] API enqueues jobs to Redis
-- [ ] Worker polls and claims jobs
-- [ ] Update job status in database
-- [ ] Progress reporting (percentage)
 
 ### Audio Processing Pipeline
 - [ ] FFmpeg canonicalization (convert to WAV 44.1kHz 16-bit)
@@ -47,5 +44,7 @@
 ---
 
 ## 📝 Activity Log
+- `2026-02-12` Track Upload & Storage completed. POST /tracks with S3 upload and validation verified.
 - `2026-02-11` Database Schema & Models completed. Alembic migrations set up, verified upgrade/downgrade cycle and API CRUD.
 - `2026-02-09` Phase 1 sprint started after Phase 0 completion.
+
