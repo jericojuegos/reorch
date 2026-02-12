@@ -13,6 +13,7 @@ COPY main.py .
 COPY config.py .
 COPY models.py .
 COPY database.py .
+COPY s3.py .
 COPY routers/ ./routers/
 COPY alembic.ini .
 COPY alembic/ ./alembic/
