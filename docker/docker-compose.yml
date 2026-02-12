@@ -93,6 +93,7 @@ services:
       dockerfile: Dockerfile
     container_name: reorch-worker
     environment:
+      PYTHONUNBUFFERED: "1"
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
       POSTGRES_USER: ${POSTGRES_USER:-reorch}

@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import get_db
 from models import Job, JobStatus, Track
+from job_queue import queue as job_queue
 
 
 router = APIRouter()
@@ -63,7 +64,12 @@ async def create_job(
     await db.commit()
     await db.refresh(db_job)
 
-    # TODO: Enqueue to Redis here
+    # Enqueue to Redis for worker processing
+    await job_queue.enqueue_job(
+        job_id=db_job.id,
+        track_id=db_job.track_id,
+        preset=db_job.preset,
+    )
 
     return JobResponse(
         id=db_job.id,

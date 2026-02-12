@@ -81,7 +81,8 @@ class Job(Base):
     )
     preset: Mapped[str] = mapped_column(String(100), nullable=False)
     status: Mapped[JobStatus] = mapped_column(
-        Enum(JobStatus), default=JobStatus.QUEUED, nullable=False
+        Enum(JobStatus, values_callable=lambda x: [e.value for e in x]),
+        default=JobStatus.QUEUED, nullable=False
     )
     progress: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     error_message: Mapped[Optional[str]] = mapped_column(Text, nullable=True)

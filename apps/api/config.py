@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     # Redis
     redis_host: str = "localhost"
     redis_port: int = 6379
+    redis_queue: str = "reorch:jobs"
     
     # S3
     s3_endpoint: str = "http://localhost:9000"

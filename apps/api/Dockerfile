@@ -14,6 +14,7 @@ COPY config.py .
 COPY models.py .
 COPY database.py .
 COPY s3.py .
+COPY job_queue.py .
 COPY routers/ ./routers/
 COPY alembic.ini .
 COPY alembic/ ./alembic/

@@ -7,6 +7,7 @@ COPY pyproject.toml .
 COPY main.py .
 COPY config.py .
 COPY queue_client.py .
+COPY database.py .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir .

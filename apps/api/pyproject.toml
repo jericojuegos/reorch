@@ -15,10 +15,11 @@ dependencies = [
     "alembic>=1.14.0",
     "aioboto3>=12.0.0",
     "python-multipart>=0.0.6",
+    "redis>=5.0.0",
 ]
 
 [tool.setuptools]
-py-modules = ["main", "config", "database", "models"]
+py-modules = ["main", "config", "database", "models", "s3", "job_queue"]
 
 [project.optional-dependencies]
 dev = [

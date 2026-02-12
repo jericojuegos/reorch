@@ -14,22 +14,16 @@
 ## 🔄 Current Task (The Focus)
 *The AI should only look here for the next step.*
 
-- [ ] **Job Queue Integration**
-    - [ ] API enqueues jobs to Redis
-    - [ ] Worker polls and claims jobs
-    - [ ] Update job status in database
-    - [ ] Progress reporting (percentage)
+- [ ] **Audio Processing Pipeline**
+    - [ ] FFmpeg canonicalization (convert to WAV 44.1kHz 16-bit)
+    - [ ] Basic analysis (tempo/BPM, duration)
+    - [ ] Ballad → Rock preset (EQ, compression, saturation)
+    - [ ] Loudness normalization (LUFS)
+    - [ ] Final render (MP3 + WAV)
 
 ---
 
 ## ⏳ Upcoming Tasks (On Deck)
-
-### Audio Processing Pipeline
-- [ ] FFmpeg canonicalization (convert to WAV 44.1kHz 16-bit)
-- [ ] Basic analysis (tempo/BPM, duration)
-- [ ] Ballad → Rock preset (EQ, compression, saturation)
-- [ ] Loudness normalization (LUFS)
-- [ ] Final render (MP3 + WAV)
 
 ### Frontend Integration
 - [ ] Upload track UI
@@ -44,6 +38,7 @@
 ---
 
 ## 📝 Activity Log
+- `2026-02-12` Job Queue Integration completed. Fixed asyncpg enum binding + timezone-naive datetime issues. E2E verified: queued → running → succeeded with progress polling.
 - `2026-02-12` Track Upload & Storage completed. POST /tracks with S3 upload and validation verified.
 - `2026-02-11` Database Schema & Models completed. Alembic migrations set up, verified upgrade/downgrade cycle and API CRUD.
 - `2026-02-09` Phase 1 sprint started after Phase 0 completion.
