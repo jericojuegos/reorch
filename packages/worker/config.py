@@ -29,6 +29,10 @@ class Settings(BaseSettings):
     worker_concurrency: int = 2
     job_timeout: int = 300  # 5 minutes
 
+    # Audio pipeline
+    target_lufs: float = -14.0
+    temp_dir: str = "/tmp/reorch"
+
     @property
     def database_url(self) -> str:
         """Construct PostgreSQL connection URL."""

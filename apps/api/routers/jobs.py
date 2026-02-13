@@ -69,6 +69,7 @@ async def create_job(
         job_id=db_job.id,
         track_id=db_job.track_id,
         preset=db_job.preset,
+        storage_path=track.storage_path,
     )
 
     return JobResponse(

@@ -14,12 +14,13 @@
 ## 🔄 Current Task (The Focus)
 *The AI should only look here for the next step.*
 
-- [ ] **Audio Processing Pipeline**
-    - [ ] FFmpeg canonicalization (convert to WAV 44.1kHz 16-bit)
-    - [ ] Basic analysis (tempo/BPM, duration)
-    - [ ] Ballad → Rock preset (EQ, compression, saturation)
-    - [ ] Loudness normalization (LUFS)
-    - [ ] Final render (MP3 + WAV)
+- [x] **Audio Processing Pipeline** *(code complete — verify verified in Docker)*
+    - [x] FFmpeg canonicalization (convert to WAV 44.1kHz 16-bit)
+    - [x] Basic analysis (tempo/BPM, duration)
+    - [x] Ballad → Rock preset (EQ, compression, saturation)
+    - [x] Loudness normalization (LUFS)
+    - [x] Final render (MP3 + WAV)
+    - [x] Run `pytest tests/test_pipeline.py` (Verified in Docker)
 
 ---
 

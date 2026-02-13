@@ -25,7 +25,9 @@ class JobQueue:
             )
         return self._client
 
-    async def enqueue_job(self, job_id: str, track_id: str, preset: str) -> None:
+    async def enqueue_job(
+        self, job_id: str, track_id: str, preset: str, storage_path: str,
+    ) -> None:
         """
         Push a job onto the Redis queue.
 
@@ -33,12 +35,14 @@ class JobQueue:
             job_id: UUID of the job record in the database
             track_id: UUID of the track to process
             preset: Processing preset name (e.g., 'ballad_to_rock')
+            storage_path: S3 key for the uploaded track file
         """
         client = await self._get_client()
         job_payload = json.dumps({
             "id": job_id,
             "track_id": track_id,
             "preset": preset,
+            "storage_path": storage_path,
         })
         await client.rpush(settings.redis_queue, job_payload)
 
