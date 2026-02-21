@@ -33,32 +33,32 @@
 
 ---
 
-## [>] 🏗️ Phase 1: MVP — Re-Orchestration Core
+## ✅ Phase 1: MVP — Re-Orchestration Core — COMPLETE
 *Goal: Deliver a usable and reliable song transformation pipeline.*
 
 ### Audio Pipeline (MVP Quality)
-- [ ] Upload audio (WAV/MP3)
-- [ ] Convert to canonical WAV format
-- [ ] Basic analysis (tempo/BPM, duration)
-- [ ] One transformation preset: **Ballad → Rock**
-- [ ] Full-track (non-stem) processing: EQ, compression, saturation, loudness normalization
-- [ ] Final render (MP3 + WAV)
+- [x] Upload audio (WAV/MP3)
+- [x] Convert to canonical WAV format
+- [x] Basic analysis (tempo/BPM, duration)
+- [x] One transformation preset: **Ballad → Rock**
+- [x] Full-track (non-stem) processing: EQ, compression, saturation, loudness normalization
+- [x] Final render (MP3 + WAV)
 
 ### Product Features
-- [ ] Create project
-- [ ] Upload track
-- [ ] Start re-orchestration job
-- [ ] View job progress
-- [ ] Download result
+- [x] Create project
+- [x] Upload track
+- [x] Start re-orchestration job
+- [x] View job progress
+- [x] Download result
 
 ### Guardrails
-- [ ] File size & duration limits
-- [ ] Retry & timeout rules
-- [ ] Clear failure messages
+- [x] File size & duration limits
+- [x] Retry & timeout rules
+- [x] Clear failure messages
 
 ---
 
-## 💅 Phase 2: V1 — Quality Upgrade & Usability
+## [>] 💅 Phase 2: V1 — Quality Upgrade & Usability
 *Goal: Improve musical quality and user control.*
 
 ### Audio Enhancements

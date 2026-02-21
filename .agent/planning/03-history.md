@@ -1,56 +1,27 @@
-# 📜 History — Completed Sprints
+# 📜 Sprint History
 
----
+## ✅ Phase 1 — MVP Re-Orchestration Core (Sprint Completed 2026-02-21)
 
-## ✅ Phase 0: Foundation (Pre-MVP)
-**Completed:** 2026-02-09
+### Frontend Integration
+- [x] Upload Track UI (drag-and-drop, progress, validation)
+- [x] Job Progress Display (polling, stage feedback)
+- [x] Download Result Button (presigned S3 URLs, WAV/MP3)
 
-### Summary
-Established the foundational infrastructure for REORCH: monorepo structure, containerized services, and scaffolded frontend/backend/worker.
+### Guardrails & Error Handling
+- [x] File size & duration limits (50MB / 10 min)
+- [x] Retry & timeout rules (3 retries / 15 min timeout)
+- [x] Clear failure messages (error propagation to UI)
 
-### Completed Tasks
+### Ad-Hoc / Side Quests
+- [x] `2026-02-21`: Refined `atomic-rules.md` and `budget-guard.md`
 
-#### Project Initialization
-- [x] Initialize Git repo
-- [x] Create monorepo structure (`apps/`, `packages/`, `docker/`)
-- [x] Create root `README.md`
-- [x] Create `.gitignore` (Python + Node)
-- [x] Create `.env.example`
-
-#### Frontend Scaffolding
-- [x] Scaffold Next.js 16 in `apps/web/`
-- [x] Install Tailwind CSS
-- [x] Create REORCH landing page
-
-#### Backend Scaffolding
-- [x] Scaffold FastAPI in `apps/api/`
-- [x] Add health check (`GET /health`)
-- [x] Environment config with Pydantic
-
-#### Worker Scaffolding
-- [x] Create worker skeleton in `packages/worker/`
-- [x] Redis queue connection (async)
-- [x] Job polling loop
-
-#### Docker Environment
-- [x] Create `docker-compose.yml` with PostgreSQL, Redis, MinIO
-- [x] Add API and Worker service definitions
-- [x] Verify all services start successfully
-
-### Deferred to Phase 1
-- [ ] PostgreSQL schema & models
-- [ ] API ↔ Database connection
-
-### Key Commits
-| Hash | Message |
-|------|---------|
-| `c501a4f` | feat: initialize .agent structure |
-| `6ed3a7a` | build: scaffold monorepo structure |
-| `b04ee12` | feat(web): scaffold Next.js frontend |
-| `083f208` | feat(api): scaffold FastAPI backend |
-| `1bab28b` | feat(worker): scaffold Redis job worker |
-| `9ef68d1` | build: configure Docker Compose |
-| `a47c1d7` | fix(docker): resolve Python packaging errors |
-
-### Repository
-Pushed to: https://github.com/jericojuegos/reorch.git (branch: `main`)
+### Activity Log
+- `2026-02-21` Guardrails & Error Handling completed.
+- `2026-02-21` Frontend Integration completed.
+- `2026-02-21` Agent rules and loop protocols refined.
+- `2026-02-17` Landing Page UI Redesign completed.
+- `2026-02-13` Audio Processing Pipeline completed (5-stage, FFmpeg + pedalboard).
+- `2026-02-12` Job Queue Integration completed.
+- `2026-02-12` Track Upload & Storage completed.
+- `2026-02-11` Database Schema & Models completed.
+- `2026-02-09` Phase 1 sprint started.
