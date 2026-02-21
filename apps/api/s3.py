@@ -16,6 +16,7 @@ class S3Client:
     def __init__(self):
         self.session = aioboto3.Session()
         self.endpoint = settings.s3_endpoint
+        self.public_endpoint = settings.s3_public_endpoint
         self.access_key = settings.s3_access_key
         self.secret_key = settings.s3_secret_key
         self.bucket = settings.s3_bucket
@@ -72,9 +73,10 @@ class S3Client:
         Returns:
             URL string
         """
+        # Use the public endpoint for presigned URLs so browsers can reach MinIO
         async with self.session.client(
             's3',
-            endpoint_url=self.endpoint,
+            endpoint_url=self.public_endpoint,
             aws_access_key_id=self.access_key,
             aws_secret_access_key=self.secret_key,
         ) as s3:

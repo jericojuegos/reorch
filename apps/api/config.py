@@ -26,6 +26,7 @@ class Settings(BaseSettings):
     
     # S3
     s3_endpoint: str = "http://localhost:9000"
+    s3_public_endpoint: str = "http://localhost:9000"  # Browser-accessible endpoint for presigned URLs
     s3_access_key: str = "minioadmin"
     s3_secret_key: str = "minioadmin"
     s3_bucket: str = "reorch-uploads"
