@@ -24,6 +24,7 @@ interface JobProgressProps {
 export function JobProgress({ jobId, onComplete, onError }: JobProgressProps) {
     const [job, setJob] = useState<Job | null>(null);
     const [isPolling, setIsPolling] = useState(true);
+    const [isDownloading, setIsDownloading] = useState(false);
 
     useEffect(() => {
         if (!jobId || !isPolling) return;
@@ -74,6 +75,36 @@ export function JobProgress({ jobId, onComplete, onError }: JobProgressProps) {
         if (progress < 80) return "Applying Genre Transformation...";
         if (progress < 100) return "Mixing & Mastering...";
         return "Finalizing...";
+    };
+
+    const handleDownload = async (format: 'wav' | 'mp3') => {
+        if (!job || isDownloading) return;
+
+        setIsDownloading(true);
+        try {
+            // Note: In MVP we only have one output file. We append the requested format 
+            // as a query param (though backend currently ignores it and returns the original).
+            // In Phase 2, this will dictate which final format we request from S3/backend.
+            const res = await fetch(`/api/jobs/${job.id}/download?format=${format}`);
+            if (!res.ok) throw new Error("Failed to get download URL");
+
+            const { url } = await res.json();
+
+            // Create a temporary anchor to trigger the download
+            const a = document.createElement('a');
+            a.href = url;
+            // Best effort to force download instead of opening in browser
+            a.download = `reorch-${job.id.substring(0, 8)}.${format}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+        } catch (err) {
+            console.error("Download error:", err);
+            alert("Failed to download the file. Please try again.");
+        } finally {
+            setIsDownloading(false);
+        }
     };
 
     return (
@@ -134,11 +165,21 @@ export function JobProgress({ jobId, onComplete, onError }: JobProgressProps) {
             {/* Success State (Download UI Placeholder) */}
             {job.status === "succeeded" && (
                 <div className="mt-6 pt-6 border-t border-white/5 flex flex-col sm:flex-row gap-4">
-                    <button className="flex-1 bg-primary hover:bg-primary/90 text-creamy-white px-4 py-3 rounded-lg font-semibold text-sm transition-all shadow-lg shadow-primary/30 flex items-center justify-center gap-2 cursor-pointer">
-                        <Download size={18} /> Download WAV
+                    <button
+                        onClick={() => handleDownload('wav')}
+                        disabled={isDownloading}
+                        className="flex-1 bg-primary hover:bg-primary/90 disabled:bg-primary/50 text-creamy-white px-4 py-3 rounded-lg font-semibold text-sm transition-all shadow-lg shadow-primary/30 flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed"
+                    >
+                        {isDownloading ? <Loader2 size={18} className="animate-spin" /> : <Download size={18} />}
+                        Download WAV
                     </button>
-                    <button className="flex-1 glass-card border border-white/10 hover:bg-white/5 text-creamy-white px-4 py-3 rounded-lg font-medium text-sm transition-all flex items-center justify-center gap-2 cursor-pointer">
-                        <FileAudio size={18} /> Download MP3
+                    <button
+                        onClick={() => handleDownload('mp3')}
+                        disabled={isDownloading}
+                        className="flex-1 glass-card border border-white/10 hover:bg-white/5 disabled:opacity-50 text-creamy-white px-4 py-3 rounded-lg font-medium text-sm transition-all flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed"
+                    >
+                        {isDownloading ? <Loader2 size={18} className="animate-spin" /> : <FileAudio size={18} />}
+                        Download MP3
                     </button>
                 </div>
             )}

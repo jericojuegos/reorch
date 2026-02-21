@@ -61,6 +61,33 @@ class S3Client:
             except ClientError as e:
                 raise RuntimeError(f"Failed to upload file to S3: {e}")
     
+    async def generate_presigned_url(self, storage_path: str, expiration: int = 3600) -> str:
+        """
+        Generate a presigned URL to download a file.
+        
+        Args:
+            storage_path: S3 key of the file
+            expiration: Time in seconds until URL expires (default 1 hour)
+            
+        Returns:
+            URL string
+        """
+        async with self.session.client(
+            's3',
+            endpoint_url=self.endpoint,
+            aws_access_key_id=self.access_key,
+            aws_secret_access_key=self.secret_key,
+        ) as s3:
+            try:
+                url = await s3.generate_presigned_url(
+                    'get_object',
+                    Params={'Bucket': self.bucket, 'Key': storage_path},
+                    ExpiresIn=expiration
+                )
+                return url
+            except ClientError as e:
+                raise RuntimeError(f"Failed to generate presigned URL: {e}")
+    
     async def ensure_bucket_exists(self) -> None:
         """Create bucket if it doesn't exist."""
         async with self.session.client(

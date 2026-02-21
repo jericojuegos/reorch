@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_db
 from models import Job, JobStatus, Track
 from job_queue import queue as job_queue
-
+from s3 import s3_client
 
 router = APIRouter()
 
@@ -136,3 +136,30 @@ async def list_jobs(
         )
         for j in jobs
     ]
+
+@router.get("/{job_id}/download")
+async def get_job_download_url(
+    job_id: str,
+    db: AsyncSession = Depends(get_db),
+):
+    """Get a presigned S3 URL to download the processed track."""
+    result = await db.execute(select(Job).where(Job.id == job_id))
+    job = result.scalar_one_or_none()
+    
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+        
+    if job.status != JobStatus.SUCCEEDED:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Job is not complete. Status is {job.status.value}"
+        )
+        
+    if not job.output_path:
+        raise HTTPException(status_code=404, detail="Output file missing for completed job")
+
+    try:
+        url = await s3_client.generate_presigned_url(job.output_path)
+        return {"url": url}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to generate download URL: {str(e)}")

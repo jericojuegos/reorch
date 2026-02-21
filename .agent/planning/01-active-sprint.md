@@ -25,10 +25,10 @@
         - [x] Implement polling for job updates
         - [x] Display progress percentage and stage name
         - [x] Show error messages if job fails
-    - [ ] **Download Result Button**
-        - [ ] Generate signed S3 URLs for WAV/MP3
-        - [ ] Create download UI with format selection
-        - [ ] Handle download errors gracefully
+    - [x] **Download Result Button**
+        - [x] Generate signed S3 URLs for WAV/MP3
+        - [x] Create download UI with format selection
+        - [x] Handle download errors gracefully
 
 ---
 
