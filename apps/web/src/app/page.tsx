@@ -1,3 +1,5 @@
+import { UploadTrack } from "../components/UploadTrack";
+
 export default function Home() {
   return (
     <div className="bg-background-dark text-creamy-white/70 font-sans selection:bg-primary/30">
@@ -56,19 +58,8 @@ export default function Home() {
               songs into new genres and generates original compositions—with
               full arrangement-level control.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-creamy-white px-8 py-4 rounded-lg font-bold flex items-center justify-center gap-2 group transition-all shadow-xl shadow-primary/20 cursor-pointer">
-                Transform a Song{" "}
-                <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">
-                  arrow_forward
-                </span>
-              </button>
-              <button className="w-full sm:w-auto glass-card text-creamy-white px-8 py-4 rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-creamy-white/10 transition-all cursor-pointer">
-                <span className="material-symbols-outlined text-xl">
-                  play_circle
-                </span>{" "}
-                See How It Works
-              </button>
+            <div className="mt-8">
+              <UploadTrack />
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-24 max-w-4xl mx-auto border-t border-creamy-white/5 pt-12">
               <div>

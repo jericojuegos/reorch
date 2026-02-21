@@ -16,7 +16,7 @@
 
 - [ ] **Frontend Integration**
     - [ ] **Upload Track UI**
-        - [ ] Create upload form component with drag-and-drop
+        - [x] Create upload form component with drag-and-drop
         - [ ] Integrate with `/api/tracks` POST endpoint
         - [ ] Display upload progress
         - [ ] Handle file validation errors
