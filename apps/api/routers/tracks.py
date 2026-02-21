@@ -11,6 +11,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_db
 from models import Project, Track
 from s3 import s3_client
+from io import BytesIO
+import mutagen
 
 
 router = APIRouter()
@@ -19,6 +21,7 @@ router = APIRouter()
 # === Constants ===
 
 MAX_FILE_SIZE = 100 * 1024 * 1024  # 100 MB
+MAX_DURATION_SECONDS = 600.0  # 10 minutes
 ALLOWED_EXTENSIONS = {'.mp3', '.wav'}
 CONTENT_TYPE_MAP = {
     '.mp3': 'audio/mpeg',
@@ -88,12 +91,32 @@ async def upload_track(
     if file_size == 0:
         raise HTTPException(status_code=400, detail="File is empty")
     
+    # Calculate duration
+    file_bytes_io = BytesIO(file_content)
+    try:
+        audio = mutagen.File(file_bytes_io)
+        if audio is None or not hasattr(audio, 'info'):
+            raise ValueError("Could not read audio metadata")
+        duration_seconds = audio.info.length
+    except Exception as e:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid or corrupted audio file: {str(e)}"
+        )
+        
+    if duration_seconds > MAX_DURATION_SECONDS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Track is too long. Maximum duration is {MAX_DURATION_SECONDS / 60} minutes."
+        )
+
     # Upload to S3
     content_type = CONTENT_TYPE_MAP.get(file_ext, 'application/octet-stream')
     try:
-        from io import BytesIO
+        # file_bytes_io cursor might be at EOF after mutagen, reset it
+        file_bytes_io.seek(0)
         storage_path = await s3_client.upload_file(
-            file_obj=BytesIO(file_content),
+            file_obj=file_bytes_io,
             project_id=project_id,
             filename=file.filename,
             content_type=content_type,
@@ -108,6 +131,7 @@ async def upload_track(
         original_filename=file.filename,
         storage_path=storage_path,
         file_size=file_size,
+        duration_seconds=duration_seconds,
         format=file_ext.lstrip('.'),
     )
     db.add(db_track)

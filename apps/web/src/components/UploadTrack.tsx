@@ -209,7 +209,7 @@ export function UploadTrack() {
 
                         <p className="text-sm text-creamy-white/50 max-w-sm mx-auto mb-6 leading-relaxed">
                             Drag and drop an audio file here, or click to browse.
-                            Supported formats: MP3, WAV. Max size: 50MB.
+                            Supported formats: MP3, WAV. Max size: 50MB. Max duration: 10 minutes.
                         </p>
 
                         <div className="inline-flex items-center gap-2 bg-creamy-white/5 px-4 py-2 rounded-lg text-sm font-medium text-creamy-white/80 border border-creamy-white/10">

@@ -43,7 +43,7 @@
 ## ⏳ Upcoming Tasks (On Deck)
 
 ### Guardrails & Error Handling
-- [ ] File size & duration limits
+- [x] File size & duration limits
 - [ ] Retry & timeout rules
 - [ ] Clear failure messages
 
