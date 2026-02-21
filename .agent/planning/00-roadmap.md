@@ -20,16 +20,16 @@
 - [x] Next.js frontend scaffolded
 - [x] FastAPI backend scaffolded
 - [x] Worker service initialized (separate process)
-- [ ] PostgreSQL schema created *(deferred to Phase 1)*
+- [x] PostgreSQL schema created *(completed in Phase 1)*
 - [x] Redis job queue wired
 - [x] S3-compatible storage configured
 - [x] Docker-based local dev environment
 
 ### Core Concepts
-- [ ] Job lifecycle model (queued → running → succeeded/failed) *(Phase 1)*
-- [ ] Track ingestion & canonicalization (FFmpeg) *(Phase 1)*
-- [ ] Preset-based processing config ("recipes") *(Phase 1)*
-- [ ] Progress checkpoints & logging *(Phase 1)*
+- [x] Job lifecycle model (queued → running → succeeded/failed) *(completed in Phase 1)*
+- [x] Track ingestion & canonicalization (FFmpeg) *(completed in Phase 1)*
+- [x] Preset-based processing config ("recipes") *(completed in Phase 1)*
+- [x] Progress checkpoints & logging *(completed in Phase 1)*
 
 ---
 
