@@ -35,7 +35,7 @@
 ## 🐛 Ad-Hoc / Side Quests
 *Quick tweaks, UI experiments, or "Side Quests" that are NOT part of the main sprint objective. Log them here to keep the history clean.*
 
-- [x] `2026-02-17`: (Web) Implemented new landing page design with full-screen hero and Tailwind v4 config.
+- [x] `2026-02-21`: (Agent) Refined `atomic-rules.md` and `budget-guard.md` based on Gemini/Claude review feedback.
 - [ ] *(Agent: log future ad-hoc tasks here)*
 
 ---
@@ -55,6 +55,7 @@
 ---
 
 ## 📝 Activity Log
+- `2026-02-21` **Agent rules and loop protocols refined.** Integrated Claude's suggestions into `atomic-rules.md` and `budget-guard.md`. Improved recovery protocols, command tiering, and verification failure paths. Updated `README.md`.
 - `2026-02-17` **Landing Page UI Redesign completed.** Implemented a modern, dark-themed landing page with full-screen hero section, custom Tailwind v4 configuration, and Outfit/Inter fonts. Verified with build + manual dev server check.
 - `2026-02-13` **Audio Processing Pipeline completed.** Implemented 5-stage pipeline (canonicalize, analyze, transform, normalize, render) with FFmpeg + pedalboard DSP. Verified with integration tests in Docker. All 7 tests passed.
 - `2026-02-12` Job Queue Integration completed. Fixed asyncpg enum binding + timezone-naive datetime issues. E2E verified: queued → running → succeeded with progress polling.

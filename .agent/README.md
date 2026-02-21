@@ -23,7 +23,7 @@ All context is strictly organized. Do not search outside these folders for defin
 
 - **⚖️ rules/** (`.agent/rules/`)
   - *Context:* Non-negotiable laws and constraints.
-  - *Key Files:* `budget-guard.md`, `coding-standards.md`, `security-policy.md`.
+  - *Key Files:* `atomic-rules.md`, `budget-guard.md`, `coding-standards.md`, `security-policy.md`.
   - *Usage:* Read this BEFORE writing a single line of code.
 
 - **⚡ workflows/** (`.agent/workflows/`)
