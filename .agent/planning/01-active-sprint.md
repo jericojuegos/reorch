@@ -12,7 +12,7 @@
 ---
 
 ## 🔄 Current Task (The Focus)
-*The AI should only look here for the next step.*
+*The AI should only look here for the next step, unless an **AD-HOC TASK** is explicitly requested.*
 
 - [ ] **Frontend Integration**
     - [ ] **Upload Track UI**
@@ -32,6 +32,14 @@
 
 ---
 
+## 🐛 Ad-Hoc / Side Quests
+*Quick tweaks, UI experiments, or "Side Quests" that are NOT part of the main sprint objective. Log them here to keep the history clean.*
+
+- [x] `2026-02-17`: (Web) Implemented new landing page design with full-screen hero and Tailwind v4 config.
+- [ ] *(Agent: log future ad-hoc tasks here)*
+
+---
+
 ## ⏳ Upcoming Tasks (On Deck)
 
 ### Guardrails & Error Handling
@@ -47,6 +55,7 @@
 ---
 
 ## 📝 Activity Log
+- `2026-02-17` **Landing Page UI Redesign completed.** Implemented a modern, dark-themed landing page with full-screen hero section, custom Tailwind v4 configuration, and Outfit/Inter fonts. Verified with build + manual dev server check.
 - `2026-02-13` **Audio Processing Pipeline completed.** Implemented 5-stage pipeline (canonicalize, analyze, transform, normalize, render) with FFmpeg + pedalboard DSP. Verified with integration tests in Docker. All 7 tests passed.
 - `2026-02-12` Job Queue Integration completed. Fixed asyncpg enum binding + timezone-naive datetime issues. E2E verified: queued → running → succeeded with progress polling.
 - `2026-02-12` Track Upload & Storage completed. POST /tracks with S3 upload and validation verified.
