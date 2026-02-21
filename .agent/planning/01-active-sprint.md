@@ -20,11 +20,11 @@
         - [x] Integrate with `/api/tracks` POST endpoint
         - [x] Display upload progress
         - [x] Handle file validation errors
-    - [ ] **Job Progress Display**
-        - [ ] Create job status component
-        - [ ] Implement polling for job updates
-        - [ ] Display progress percentage and stage name
-        - [ ] Show error messages if job fails
+    - [x] **Job Progress Display**
+        - [x] Create job status component
+        - [x] Implement polling for job updates
+        - [x] Display progress percentage and stage name
+        - [x] Show error messages if job fails
     - [ ] **Download Result Button**
         - [ ] Generate signed S3 URLs for WAV/MP3
         - [ ] Create download UI with format selection

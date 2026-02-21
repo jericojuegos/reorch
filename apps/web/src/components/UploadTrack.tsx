@@ -3,12 +3,14 @@
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Upload, Music, AlertCircle, X, FileAudio, Loader2 } from "lucide-react";
+import { JobProgress } from "./JobProgress";
 
 export function UploadTrack() {
     const [file, setFile] = useState<File | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
+    const [activeJobId, setActiveJobId] = useState<string | null>(null);
 
     const onDrop = useCallback((acceptedFiles: File[], rejectedFiles: any[]) => {
         setError(null);
@@ -39,6 +41,7 @@ export function UploadTrack() {
         setFile(null);
         setError(null);
         setUploadProgress(0);
+        setActiveJobId(null);
     };
 
     const processTrack = async (e: React.MouseEvent) => {
@@ -65,7 +68,7 @@ export function UploadTrack() {
             const projectId = project.id;
 
             // 2. Upload the track with progress
-            await new Promise<void>((resolve, reject) => {
+            const uploadRes = await new Promise<any>((resolve, reject) => {
                 const formData = new FormData();
                 formData.append("project_id", projectId);
                 formData.append("file", file);
@@ -82,10 +85,13 @@ export function UploadTrack() {
 
                 xhr.onload = () => {
                     if (xhr.status >= 200 && xhr.status < 300) {
-                        resolve();
-                        // TODO: Move to the next stage (Job status)
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            resolve(response);
+                        } catch (e) {
+                            reject(new Error("Invalid response from server"));
+                        }
                     } else {
-                        console.error(xhr.responseText);
                         reject(new Error("Failed to upload track"));
                     }
                 };
@@ -95,12 +101,41 @@ export function UploadTrack() {
                 xhr.send(formData);
             });
 
+            // 3. Create the job
+            const trackId = uploadRes.id;
+            const jobRes = await fetch("/api/jobs/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ track_id: trackId, preset: "ballad_to_rock" }),
+            });
+
+            if (!jobRes.ok) {
+                throw new Error("Failed to create job");
+            }
+
+            const job = await jobRes.json();
+            setActiveJobId(job.id);
+
         } catch (err: any) {
             setError(err.message || "An error occurred during processing");
         } finally {
             setIsUploading(false);
         }
     };
+
+    if (activeJobId) {
+        return (
+            <div className="w-full max-w-2xl mx-auto space-y-6">
+                <JobProgress jobId={activeJobId} />
+                <button
+                    onClick={(e) => clearFile(e as any)}
+                    className="w-full glass-card border border-white/10 hover:bg-white/5 text-creamy-white px-4 py-3 rounded-lg font-medium text-sm transition-all cursor-pointer"
+                >
+                    Process Another Track
+                </button>
+            </div>
+        );
+    }
 
     return (
         <div className="w-full max-w-2xl mx-auto">
