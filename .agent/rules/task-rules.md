@@ -34,7 +34,7 @@ If a task cannot be completed in the current Sprint/Phase:
     - *Example:* `[!] Payment API (Blocked: waiting for credentials)`
 - **New Discoveries:** If you discover new work that is not in the plan:
     1.  **Do NOT** secretly do it.
-    2.  **Add it** to `active-tasks.md` as a new item.
+    2.  **Add it** to the `## 🐛 Ad-Hoc / Side Quests` section of `01-active-sprint.md` if it's a small tweak/experiment requested by the user.
     3.  **STOP & ASK** if the task implies **high complexity** (e.g., would take a human >30 mins, or touches >5 files).
 
 ## 6. Source of Truth

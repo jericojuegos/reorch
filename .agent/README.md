@@ -39,7 +39,7 @@ All context is strictly organized. Do not search outside these folders for defin
 All AI Agents (Cursor, Windsurf, Copilot, Claude.ai, or similar) must follow this loop:
 
 1.  **DISCOVER**: Read this README to understand the scope.
-2.  **ALIGN**: Check `planning/01-active-sprint.md` to see what needs to be done.
+2.  **ALIGN**: Check `planning/01-active-sprint.md` to see what needs to be done. Explicitly look for **AD-HOC TASK** overrides.
 3.  **VALIDATE**: Check `rules/` to ensure compliance.
 4.  **LEARN**: Check `knowledge/` to understand existing patterns.
 5.  **PLAN**: If a workflow exists in `workflows/`, adopt it.

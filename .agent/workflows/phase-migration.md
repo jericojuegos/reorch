@@ -12,8 +12,8 @@ description: "Automates the transition between project phases: audits completed 
 3.  **Update Activity Log:** Add a completion entry to `planning/01-active-sprint.md`.
 
 ## 2. Archive (Optional)
-1.  If `planning/01-active-sprint.md` is cluttered, move the completed tasks to `planning/03-history.md` (create if missing).
-2.  **Clear** the completed items from the "Current Task" and "Upcoming Tasks" sections.
+1.  If `planning/01-active-sprint.md` is cluttered, move the completed tasks (including those in the **Ad-Hoc / Side Quests** section) to `planning/03-history.md` (create if missing).
+2.  **Clear** the completed items from the "Current Task", "Upcoming Tasks", and "Ad-Hoc / Side Quests" sections.
 
 ## 3. Activate Next Phase
 1.  **Read `planning/00-roadmap.md`:** Identify the next Phase.
