@@ -54,7 +54,7 @@ export function UploadTrack() {
 
         try {
             // 1. Create a dummy project for this track
-            const projectRes = await fetch("/api/projects/", {
+            const projectRes = await fetch("/api/projects", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name: `Project: ${file.name}` }),
@@ -74,7 +74,7 @@ export function UploadTrack() {
                 formData.append("file", file);
 
                 const xhr = new XMLHttpRequest();
-                xhr.open("POST", "/api/tracks/", true);
+                xhr.open("POST", "/api/tracks", true);
 
                 xhr.upload.onprogress = (event) => {
                     if (event.lengthComputable) {
@@ -103,7 +103,7 @@ export function UploadTrack() {
 
             // 3. Create the job
             const trackId = uploadRes.id;
-            const jobRes = await fetch("/api/jobs/", {
+            const jobRes = await fetch("/api/jobs", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ track_id: trackId, preset: "ballad_to_rock" }),

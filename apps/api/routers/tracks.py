@@ -49,7 +49,7 @@ class TrackResponse(BaseModel):
 
 # === Endpoints ===
 
-@router.post("/", response_model=TrackResponse, status_code=201)
+@router.post("", response_model=TrackResponse, status_code=201)
 async def upload_track(
     project_id: str = Form(...),
     file: UploadFile = File(...),

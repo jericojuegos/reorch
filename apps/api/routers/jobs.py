@@ -43,7 +43,7 @@ class JobResponse(BaseModel):
 
 # === Endpoints ===
 
-@router.post("/", response_model=JobResponse, status_code=201)
+@router.post("", response_model=JobResponse, status_code=201)
 async def create_job(
     job: JobCreate,
     db: AsyncSession = Depends(get_db),
@@ -110,7 +110,7 @@ async def get_job(
     )
 
 
-@router.get("/", response_model=list[JobResponse])
+@router.get("", response_model=list[JobResponse])
 async def list_jobs(
     status: Optional[str] = None,
     db: AsyncSession = Depends(get_db),

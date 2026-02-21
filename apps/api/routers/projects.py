@@ -37,7 +37,7 @@ class ProjectResponse(BaseModel):
 
 # === Endpoints ===
 
-@router.post("/", response_model=ProjectResponse, status_code=201)
+@router.post("", response_model=ProjectResponse, status_code=201)
 async def create_project(
     project: ProjectCreate,
     db: AsyncSession = Depends(get_db),
@@ -59,7 +59,7 @@ async def create_project(
     )
 
 
-@router.get("/", response_model=list[ProjectResponse])
+@router.get("", response_model=list[ProjectResponse])
 async def list_projects(
     db: AsyncSession = Depends(get_db),
 ):
