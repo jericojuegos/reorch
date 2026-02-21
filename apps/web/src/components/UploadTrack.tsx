@@ -2,11 +2,13 @@
 
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { Upload, Music, AlertCircle, X, FileAudio } from "lucide-react";
+import { Upload, Music, AlertCircle, X, FileAudio, Loader2 } from "lucide-react";
 
 export function UploadTrack() {
     const [file, setFile] = useState<File | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
 
     const onDrop = useCallback((acceptedFiles: File[], rejectedFiles: any[]) => {
         setError(null);
@@ -33,8 +35,71 @@ export function UploadTrack() {
 
     const clearFile = (e: React.MouseEvent) => {
         e.stopPropagation();
+        if (isUploading) return;
         setFile(null);
         setError(null);
+        setUploadProgress(0);
+    };
+
+    const processTrack = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!file || isUploading) return;
+
+        setIsUploading(true);
+        setError(null);
+        setUploadProgress(0);
+
+        try {
+            // 1. Create a dummy project for this track
+            const projectRes = await fetch("/api/projects/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: `Project: ${file.name}` }),
+            });
+
+            if (!projectRes.ok) {
+                throw new Error("Failed to create project");
+            }
+
+            const project = await projectRes.json();
+            const projectId = project.id;
+
+            // 2. Upload the track with progress
+            await new Promise<void>((resolve, reject) => {
+                const formData = new FormData();
+                formData.append("project_id", projectId);
+                formData.append("file", file);
+
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", "/api/tracks/", true);
+
+                xhr.upload.onprogress = (event) => {
+                    if (event.lengthComputable) {
+                        const percentComplete = Math.round((event.loaded / event.total) * 100);
+                        setUploadProgress(percentComplete);
+                    }
+                };
+
+                xhr.onload = () => {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        resolve();
+                        // TODO: Move to the next stage (Job status)
+                    } else {
+                        console.error(xhr.responseText);
+                        reject(new Error("Failed to upload track"));
+                    }
+                };
+
+                xhr.onerror = () => reject(new Error("Network error during upload"));
+
+                xhr.send(formData);
+            });
+
+        } catch (err: any) {
+            setError(err.message || "An error occurred during processing");
+        } finally {
+            setIsUploading(false);
+        }
     };
 
     return (
@@ -63,19 +128,36 @@ export function UploadTrack() {
                             </p>
                         </div>
 
-                        <div className="mt-4 flex gap-3 z-10">
-                            <button
-                                onClick={clearFile}
-                                className="px-4 py-2 rounded font-medium text-sm text-creamy-white/70 hover:text-creamy-white hover:bg-creamy-white/10 transition-colors flex items-center gap-2 cursor-pointer"
-                            >
-                                <X size={16} /> Remove
-                            </button>
-                            <button
-                                onClick={(e) => { e.stopPropagation(); /* TODO: upload to /api/tracks */ }}
-                                className="bg-primary hover:bg-primary/90 text-creamy-white px-6 py-2 rounded font-semibold text-sm transition-all shadow-lg shadow-primary/30 flex items-center gap-2 cursor-pointer"
-                            >
-                                <Upload size={16} /> Process Track
-                            </button>
+                        <div className="mt-4 flex gap-3 z-10 w-full justify-center">
+                            {isUploading ? (
+                                <div className="w-full max-w-xs space-y-2">
+                                    <div className="flex justify-between text-xs font-mono text-creamy-white/50">
+                                        <span>UPLOADING</span>
+                                        <span>{uploadProgress}%</span>
+                                    </div>
+                                    <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                                        <div
+                                            className="h-full bg-primary rounded-full transition-all duration-300"
+                                            style={{ width: `${uploadProgress}%` }}
+                                        ></div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <>
+                                    <button
+                                        onClick={clearFile}
+                                        className="px-4 py-2 rounded font-medium text-sm text-creamy-white/70 hover:text-creamy-white hover:bg-creamy-white/10 transition-colors flex items-center gap-2 cursor-pointer"
+                                    >
+                                        <X size={16} /> Remove
+                                    </button>
+                                    <button
+                                        onClick={processTrack}
+                                        className="bg-primary hover:bg-primary/90 text-creamy-white px-6 py-2 rounded font-semibold text-sm transition-all shadow-lg shadow-primary/30 flex items-center gap-2 cursor-pointer"
+                                    >
+                                        <Upload size={16} /> Process Track
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </div>
                 ) : (

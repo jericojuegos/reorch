@@ -17,9 +17,9 @@
 - [ ] **Frontend Integration**
     - [ ] **Upload Track UI**
         - [x] Create upload form component with drag-and-drop
-        - [ ] Integrate with `/api/tracks` POST endpoint
-        - [ ] Display upload progress
-        - [ ] Handle file validation errors
+        - [x] Integrate with `/api/tracks` POST endpoint
+        - [x] Display upload progress
+        - [x] Handle file validation errors
     - [ ] **Job Progress Display**
         - [ ] Create job status component
         - [ ] Implement polling for job updates
