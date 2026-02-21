@@ -55,6 +55,7 @@
 ---
 
 ## 📝 Activity Log
+- `2026-02-21` **Guardrails & Error Handling completed.** Enforced a 50MB and 10-minute track duration limit on `POST /api/tracks` using Mutagen. Added job timeout bounds (15 min) and maximum retry logic (3 retries) to the asynchronous worker in `packages/worker/main.py`. Validated error propagation to the `JobProgress` UI.
 - `2026-02-21` **Frontend Integration completed.** Created `UploadTrack` drag-and-drop component, integrated with `/api/tracks` using XMLHttpRequest for upload progress. Added `JobProgress` component for polling `/api/jobs/{job_id}` and displaying visual stage feedback. Integrated `s3_client.generate_presigned_url` into the backend to power the final WAV/MP3 download buttons.
 - `2026-02-21` **Agent rules and loop protocols refined.** Integrated Claude's suggestions into `atomic-rules.md` and `budget-guard.md`. Improved recovery protocols, command tiering, and verification failure paths. Updated `README.md`.
 - `2026-02-17` **Landing Page UI Redesign completed.** Implemented a modern, dark-themed landing page with full-screen hero section, custom Tailwind v4 configuration, and Outfit/Inter fonts. Verified with build + manual dev server check.
