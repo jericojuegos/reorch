@@ -14,6 +14,8 @@ from database import update_job_status, update_job_progress
 from s3_client import s3_client
 from pipeline import run_pipeline
 
+MAX_RETRIES = 3
+
 
 class Worker:
     """Audio processing worker that polls Redis for jobs."""
@@ -46,7 +48,10 @@ class Worker:
         preset = job.get("preset", "ballad_to_rock")
         track_id = job.get("track_id", "unknown")
         storage_path = job.get("storage_path", "")
-        print(f"🔄 Processing job {job_id} (preset: {preset}, track: {track_id})")
+        # Get retry count from the job payload, default to 0
+        retries = job.get("retries", 0)
+        
+        print(f"🔄 Processing job {job_id} (preset: {preset}, track: {track_id}, attempt: {retries + 1}/{MAX_RETRIES + 1})")
 
         # Local working directories
         job_dir = os.path.join(settings.temp_dir, job_id)
@@ -65,17 +70,24 @@ class Worker:
             print(f"  ⬇️  Downloading from S3: {storage_path}")
             await s3_client.download_track(storage_path, local_input)
 
-            # Run the audio pipeline with progress updates
+            # Run the audio pipeline with progress updates and a strict 15-minute timeout
             async def on_progress(pct: int, msg: str):
                 print(f"  ⏳ [{pct}%] {msg}")
                 await update_job_progress(job_id, pct)
 
-            result = await run_pipeline(
-                input_path=local_input,
-                output_dir=output_dir,
-                preset=preset,
-                on_progress=on_progress,
-            )
+            try:
+                # We use asyncio.wait_for to enforce a 15-minute max processing time per job
+                result = await asyncio.wait_for(
+                    run_pipeline(
+                        input_path=local_input,
+                        output_dir=output_dir,
+                        preset=preset,
+                        on_progress=on_progress,
+                    ),
+                    timeout=900.0,
+                )
+            except asyncio.TimeoutError:
+                raise RuntimeError(f"Job processing exceeded the maximum time limit of 15 minutes.")
 
             # Upload outputs to S3
             wav_key = f"outputs/{job_id}/result.wav"
@@ -93,11 +105,17 @@ class Worker:
             print(f"✅ Completed job {job_id}")
 
         except Exception as e:
-            print(f"❌ Job {job_id} failed: {e}")
-            await update_job_status(
-                job_id, "failed",
-                error_message=str(e),
-            )
+            print(f"❌ Job {job_id} failed on attempt {retries + 1}: {e}")
+            if retries < MAX_RETRIES:
+                print(f"  ↪️  Requeuing job {job_id} (Attempt {retries + 2}/{MAX_RETRIES + 1})")
+                job["retries"] = retries + 1
+                await self.queue.enqueue(job)
+            else:
+                print(f"❌ Job {job_id} exceeded maximum retries. Marking as failed.")
+                await update_job_status(
+                    job_id, "failed",
+                    error_message=str(e),
+                )
         finally:
             # Clean up local files
             shutil.rmtree(job_dir, ignore_errors=True)

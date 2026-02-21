@@ -44,7 +44,7 @@
 
 ### Guardrails & Error Handling
 - [x] File size & duration limits
-- [ ] Retry & timeout rules
+- [x] Retry & timeout rules
 - [ ] Clear failure messages
 
 ---
