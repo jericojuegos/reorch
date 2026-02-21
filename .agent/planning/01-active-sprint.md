@@ -15,7 +15,7 @@
 *The AI should only look here for the next step, unless an **AD-HOC TASK** is explicitly requested.*
 
 - [ ] **Frontend Integration**
-    - [ ] **Upload Track UI**
+    - [x] **Upload Track UI**
         - [x] Create upload form component with drag-and-drop
         - [x] Integrate with `/api/tracks` POST endpoint
         - [x] Display upload progress
