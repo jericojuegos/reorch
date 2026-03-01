@@ -33,6 +33,11 @@ class Settings(BaseSettings):
     target_lufs: float = -14.0
     temp_dir: str = "/tmp/reorch"
 
+    # Demucs stem separation
+    demucs_model: str = "htdemucs"
+    demucs_device: str = "auto"  # "auto", "cpu", or "cuda"
+    demucs_shifts: int = 1  # Higher = better quality but slower
+
     @property
     def database_url(self) -> str:
         """Construct PostgreSQL connection URL."""

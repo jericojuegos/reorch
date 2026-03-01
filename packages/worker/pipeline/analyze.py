@@ -1,7 +1,8 @@
 """
 Stage 2: Basic audio analysis — duration and BPM estimation.
 """
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import Optional
 
 import numpy as np
 import soundfile as sf
@@ -12,6 +13,8 @@ class AnalysisResult:
     """Result of audio analysis."""
     duration_seconds: float
     bpm: float
+    stem_durations: Optional[dict[str, float]] = None
+    stem_rms: Optional[dict[str, float]] = None
 
 
 def _estimate_bpm(samples: np.ndarray, sample_rate: int) -> float:
@@ -84,3 +87,32 @@ def analyze(canonical_path: str) -> AnalysisResult:
         duration_seconds=round(duration, 2),
         bpm=round(bpm, 1),
     )
+
+
+def analyze_stems(stem_paths: dict[str, str]) -> dict[str, dict]:
+    """
+    Compute per-stem metadata (duration and RMS energy).
+
+    Args:
+        stem_paths: Dict mapping stem name to WAV file path.
+
+    Returns:
+        Dict with 'durations' and 'rms' sub-dicts keyed by stem name.
+    """
+    durations: dict[str, float] = {}
+    rms_values: dict[str, float] = {}
+
+    for stem_name, path in stem_paths.items():
+        samples, sr = sf.read(path, dtype="float32")
+        durations[stem_name] = round(len(samples) / sr, 2)
+
+        # RMS energy (mono mix for consistency)
+        if samples.ndim > 1:
+            mono = np.mean(samples, axis=1)
+        else:
+            mono = samples
+        rms = float(np.sqrt(np.mean(mono ** 2)))
+        rms_values[stem_name] = round(rms, 6)
+
+    return {"durations": durations, "rms": rms_values}
+

@@ -15,11 +15,11 @@
 *The AI should only look here for the next step, unless an **AD-HOC TASK** is explicitly requested.*
 
 - [ ] **Audio Enhancements**
-    - [ ] Stem separation (vocals / drums / bass / other)
-        - [ ] Research & integrate Demucs (or similar) into worker pipeline
-        - [ ] Add `separate` stage between `canonicalize` and `analyze`
-        - [ ] Store individual stem files in S3
-        - [ ] Update `AnalysisResult` to include per-stem metadata
+    - [x] Stem separation (vocals / drums / bass / other)
+        - [x] Research & integrate Demucs (or similar) into worker pipeline
+        - [x] Add `separate` stage between `canonicalize` and `analyze`
+        - [x] Store individual stem files in S3
+        - [x] Update `AnalysisResult` to include per-stem metadata
     - [ ] Stem-aligned time-stretch
         - [ ] Implement tempo adjustment per-stem
         - [ ] Preserve vocal pitch during stretch
@@ -79,4 +79,5 @@
 ---
 
 ## 📝 Activity Log
+- `2026-03-02` **Stem separation integrated.** Created `pipeline/separate.py` (Demucs htdemucs wrapper), updated pipeline to 6-stage flow, added per-stem metadata to `AnalysisResult`, S3 stem upload in `main.py`, mock-based tests.
 - `2026-02-21` **Phase 2 sprint board created.** Migrated from Phase 1 (completed). Archived Phase 1 tasks to `03-history.md`. Exploded Phase 2 roadmap items into technical sub-tasks.

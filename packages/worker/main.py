@@ -96,6 +96,12 @@ class Worker:
             await s3_client.upload_output(result.wav_path, wav_key)
             await s3_client.upload_output(result.mp3_path, mp3_key)
 
+            # Upload stem files to S3
+            for stem_name, stem_path in result.separation.stem_paths.items():
+                stem_key = f"outputs/{job_id}/stems/{stem_name}.wav"
+                await s3_client.upload_output(stem_path, stem_key)
+            print(f"  ⬆️  Uploaded {len(result.separation.stem_paths)} stems to S3")
+
             # Mark as succeeded
             await update_job_status(
                 job_id, "succeeded",

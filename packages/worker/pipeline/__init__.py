@@ -2,7 +2,7 @@
 REORCH Audio Processing Pipeline.
 
 Orchestrates the full processing chain:
-  canonicalize → analyze → transform → normalize → render
+  canonicalize → analyze → separate → transform → normalize → render
 """
 import os
 import tempfile
@@ -12,7 +12,8 @@ from pathlib import Path
 from typing import Callable, Optional, Awaitable
 
 from pipeline.canonicalize import canonicalize
-from pipeline.analyze import analyze, AnalysisResult
+from pipeline.analyze import analyze, analyze_stems, AnalysisResult
+from pipeline.separate import separate, SeparationResult
 from pipeline.transform import transform
 from pipeline.normalize import normalize
 from pipeline.render import render, RenderResult
@@ -22,6 +23,7 @@ from pipeline.render import render, RenderResult
 class PipelineResult:
     """Result of a full pipeline run."""
     analysis: AnalysisResult
+    separation: SeparationResult
     wav_path: str
     mp3_path: str
 
@@ -58,29 +60,41 @@ async def run_pipeline(
         canonical_path = canonicalize(input_path, work_dir)
         await _progress(10, "Canonicalization complete")
 
-        # Stage 2: Analyze (10–25%)
+        # Stage 2: Analyze (10–20%)
         await _progress(15, "Analyzing audio")
         analysis = analyze(canonical_path)
-        await _progress(25, f"Analysis complete (BPM: {analysis.bpm:.0f}, duration: {analysis.duration_seconds:.1f}s)")
+        await _progress(20, f"Analysis complete (BPM: {analysis.bpm:.0f}, duration: {analysis.duration_seconds:.1f}s)")
 
-        # Stage 3: Transform (25–60%)
-        await _progress(30, f"Applying {preset} transformation")
+        # Stage 3: Separate stems (20–55%)
+        await _progress(25, "Separating stems (vocals, drums, bass, other)")
+        separation = separate(canonical_path, work_dir)
+        await _progress(50, "Stem separation complete — analyzing stems")
+
+        # Enrich analysis with per-stem metadata
+        stem_meta = analyze_stems(separation.stem_paths)
+        analysis.stem_durations = stem_meta["durations"]
+        analysis.stem_rms = stem_meta["rms"]
+        await _progress(55, "Stem analysis complete")
+
+        # Stage 4: Transform (55–75%)
+        await _progress(60, f"Applying {preset} transformation")
         transformed_path = transform(canonical_path, work_dir, preset=preset)
-        await _progress(60, "Transformation complete")
+        await _progress(75, "Transformation complete")
 
-        # Stage 4: Normalize (60–85%)
-        await _progress(65, "Normalizing loudness")
+        # Stage 5: Normalize (75–90%)
+        await _progress(80, "Normalizing loudness")
         normalized_path = normalize(transformed_path, work_dir)
-        await _progress(85, "Normalization complete")
+        await _progress(90, "Normalization complete")
 
-        # Stage 5: Render (85–100%)
-        await _progress(90, "Rendering final output")
+        # Stage 6: Render (90–100%)
+        await _progress(95, "Rendering final output")
         os.makedirs(output_dir, exist_ok=True)
         result = render(normalized_path, output_dir)
         await _progress(100, "Render complete")
 
         return PipelineResult(
             analysis=analysis,
+            separation=separation,
             wav_path=result.wav_path,
             mp3_path=result.mp3_path,
         )
