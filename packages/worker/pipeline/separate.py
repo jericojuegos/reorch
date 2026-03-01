@@ -1,14 +1,17 @@
 """
 Stage 3: Stem separation — isolate vocals, drums, bass, and other.
 
-Uses Facebook's Demucs (Hybrid Transformer) model via the official Python API.
+Uses Facebook's Demucs (Hybrid Transformer) model via the pretrained + apply API.
 """
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
 
 import torch
-from demucs.api import Separator, save_audio
+import torchaudio
+from demucs.pretrained import get_model
+from demucs.apply import apply_model
+from demucs.audio import save_audio
 
 from config import settings
 
@@ -49,24 +52,43 @@ def separate(canonical_path: str, work_dir: str) -> SeparationResult:
     """
     device = _resolve_device(settings.demucs_device)
 
-    separator = Separator(
-        model=settings.demucs_model,
-        device=device,
+    # Load the pretrained model
+    model = get_model(settings.demucs_model)
+    model.to(device)
+
+    # Load audio and convert to model's expected format
+    wav, sr = torchaudio.load(canonical_path)
+
+    # Resample if needed
+    if sr != model.samplerate:
+        wav = torchaudio.transforms.Resample(sr, model.samplerate)(wav)
+
+    # Normalize reference for stable separation
+    ref = wav.mean(0)
+    wav = (wav - ref.mean()) / (ref.std() + 1e-8)
+
+    # Apply the model — returns tensor of shape (sources, channels, samples)
+    sources = apply_model(
+        model,
+        wav[None].to(device),
         shifts=settings.demucs_shifts,
+        split=True,
+        overlap=0.25,
         progress=False,
     )
 
-    # Run separation
-    origin, separated = separator.separate_audio_file(Path(canonical_path))
+    # Denormalize
+    sources = sources * ref.std() + ref.mean()
+    sources = sources.squeeze(0)  # Remove batch dim → (sources, channels, samples)
 
     # Save each stem to disk
     stems_dir = os.path.join(work_dir, "stems")
     os.makedirs(stems_dir, exist_ok=True)
 
     stem_paths: dict[str, str] = {}
-    for stem_name, stem_tensor in separated.items():
+    for i, stem_name in enumerate(model.sources):
         stem_path = os.path.join(stems_dir, f"{stem_name}.wav")
-        save_audio(stem_tensor, stem_path, samplerate=separator.samplerate)
+        save_audio(sources[i], stem_path, samplerate=model.samplerate)
         stem_paths[stem_name] = stem_path
 
     return SeparationResult(
