@@ -28,7 +28,7 @@ All context is strictly organized. Do not search outside these folders for defin
 
 - **⚡ workflows/** (`.agent/workflows/`)
   - *Context:* Standard Operating Procedures (SOPs).
-  - *Key Files:* `phase-migration.md`.
+  - *Key Files:* `phase-migration.md`, `uat-checklist.md`.
   - *Usage:* Follow these strict steps for complex tasks.
 
 - **🛠 skills/** (`.agent/skills/`)

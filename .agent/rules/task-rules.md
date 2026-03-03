@@ -21,6 +21,7 @@ A task is considered **complete** `[x]` ONLY when:
 1.  The implementation exists in the codebase.
 2.  The expected behavior is **verified** (manual test, API test, or unit test).
 3.  **Evidence:** If asked, you must be able to state *how* it was verified.
+4.  **UAT Checklist:** At end-of-sprint, generate a UAT checklist per `workflows/uat-checklist.md`. The agent handles Levels 1–2 (automated tests + checklist); the user handles Level 3 (judgment).
 
 ## 4. Moving & Refinement (The "Drift" Protocol)
 If a task cannot be completed in the current Sprint/Phase:
