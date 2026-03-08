@@ -29,9 +29,9 @@
     - [x] Better low-end control (bass)
         - [x] Sidechain-style ducking on bass stem
         - [x] Sub-bass enhancement filter
-    - [ ] Cleaner vocal presence
-        - [ ] De-ess and mid-range boost on vocal stem
-        - [ ] Reduce muddiness with surgical EQ
+    - [x] Cleaner vocal presence
+        - [x] De-ess and mid-range boost on vocal stem
+        - [x] Reduce muddiness with surgical EQ
     - [ ] Improved mastering chain (LUFS + true peak)
         - [ ] Add true peak limiter to render stage
         - [ ] Target -14 LUFS for streaming
@@ -79,6 +79,7 @@
 ---
 
 ## 📝 Activity Log
+- `2026-03-08` **Cleaner vocal presence.** Added vocal Pedalboard chain to `ballad_to_rock`: HPF 80Hz, -2.5dB mud cut at 200Hz, +3.5dB presence boost at 3kHz, -3dB de-ess at 8kHz, gentle 2.5:1 compression.
 - `2026-03-08` **Better low-end control (bass).** Added bass Pedalboard chain (+4dB sub-bass shelf, HPF 30Hz, 3:1 comp), cross-stem sidechain ducking (bass ducks on drum envelope, 50% depth), `SidechainConfig` dataclass.
 - `2026-03-08` **Improved drum energy for rock presets.** Created `pipeline/stem_fx.py` with per-stem pedalboard chains, parallel compression (60% wet), aggressive drum chain (6:1 comp, 12dB drive, 5kHz snap), wired as Stage 3c.
 - `2026-03-08` **Stem-aligned time-stretch implemented.** Created `pipeline/time_stretch.py` (pyrubberband wrapper with vocal formant preservation), updated pipeline to 7-stage flow with remix, added per-stem mock-based tests.

@@ -172,11 +172,10 @@ class TestStemFx:
         assert info.channels == 2
 
     def test_non_drum_stems_unchanged(self, tmp_path):
-        """Vocals and other should pass through unchanged for ballad_to_rock."""
+        """Only 'other' should pass through unchanged for ballad_to_rock."""
         separation = _make_mock_separation(str(tmp_path))
         result = apply_stem_fx(separation.stem_paths, "ballad_to_rock", str(tmp_path))
-        for name in ["vocals", "other"]:
-            assert result[name] == separation.stem_paths[name]
+        assert result["other"] == separation.stem_paths["other"]
 
     def test_bass_stem_is_processed(self, tmp_path):
         """ballad_to_rock should process the bass stem (EQ + compression + sidechain)."""
@@ -186,6 +185,16 @@ class TestStemFx:
         assert result["bass"] != separation.stem_paths["bass"]
         assert os.path.exists(result["bass"])
         info = sf.info(result["bass"])
+        assert info.samplerate == 44100
+        assert info.channels == 2
+
+    def test_vocal_stem_is_processed(self, tmp_path):
+        """ballad_to_rock should process the vocal stem (de-ess, EQ, compression)."""
+        separation = _make_mock_separation(str(tmp_path))
+        result = apply_stem_fx(separation.stem_paths, "ballad_to_rock", str(tmp_path))
+        assert result["vocals"] != separation.stem_paths["vocals"]
+        assert os.path.exists(result["vocals"])
+        info = sf.info(result["vocals"])
         assert info.samplerate == 44100
         assert info.channels == 2
 

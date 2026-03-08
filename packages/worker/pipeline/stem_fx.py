@@ -58,6 +58,23 @@ STEM_FX: dict[str, dict[str, Pedalboard]] = {
                 release_ms=150.0,
             ),
         ]),
+        "vocals": Pedalboard([
+            # Remove low-end mud from vocals
+            HighpassFilter(cutoff_frequency_hz=80.0),
+            # Surgical EQ: cut muddiness around 200 Hz
+            PeakFilter(cutoff_frequency_hz=200.0, gain_db=-2.5, q=1.5),
+            # Mid-range presence boost for clarity and intelligibility
+            PeakFilter(cutoff_frequency_hz=3000.0, gain_db=3.5, q=1.2),
+            # De-ess: attenuate harsh sibilance around 8 kHz
+            PeakFilter(cutoff_frequency_hz=8000.0, gain_db=-3.0, q=2.0),
+            # Gentle dynamic control — keeps vocals even without over-compression
+            Compressor(
+                threshold_db=-20.0,
+                ratio=2.5,
+                attack_ms=8.0,
+                release_ms=120.0,
+            ),
+        ]),
     },
 }
 
