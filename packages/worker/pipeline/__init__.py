@@ -15,6 +15,7 @@ from pipeline.canonicalize import canonicalize
 from pipeline.analyze import analyze, analyze_stems, AnalysisResult
 from pipeline.separate import separate, SeparationResult
 from pipeline.time_stretch import time_stretch_stems, remix_stems
+from pipeline.stem_fx import apply_stem_fx
 from pipeline.transform import transform
 from pipeline.normalize import normalize
 from pipeline.render import render, RenderResult
@@ -90,8 +91,12 @@ async def run_pipeline(
             )
             await _progress(58, "Stem time-stretch complete")
 
+        # Stage 3c: Per-stem effects (58–60%)
+        await _progress(59, f"Applying per-stem FX ({preset})")
+        current_stems = apply_stem_fx(current_stems, preset, work_dir)
+
         # Remix stems into a single mix for the transform stage
-        await _progress(59, "Remixing stems")
+        await _progress(60, "Remixing stems")
         remix_path = remix_stems(current_stems, work_dir)
         await _progress(60, "Remix complete")
 

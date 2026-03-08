@@ -23,6 +23,7 @@ from pipeline.canonicalize import canonicalize
 from pipeline.analyze import analyze, analyze_stems
 from pipeline.separate import SeparationResult
 from pipeline.time_stretch import time_stretch_stems, remix_stems
+from pipeline.stem_fx import apply_stem_fx
 from pipeline.normalize import normalize
 from pipeline.transform import transform
 from pipeline.render import render
@@ -154,6 +155,35 @@ class TestAnalyzeStems:
             assert meta["durations"][name] > 0
             assert name in meta["rms"]
             assert meta["rms"][name] > 0
+
+
+class TestStemFx:
+    """Tests for per-stem effects processing."""
+
+    def test_drum_stem_is_processed(self, tmp_path):
+        """ballad_to_rock should process the drum stem into a new file."""
+        separation = _make_mock_separation(str(tmp_path))
+        result = apply_stem_fx(separation.stem_paths, "ballad_to_rock", str(tmp_path))
+        # Drum path should be different (processed)
+        assert result["drums"] != separation.stem_paths["drums"]
+        assert os.path.exists(result["drums"])
+        info = sf.info(result["drums"])
+        assert info.samplerate == 44100
+        assert info.channels == 2
+
+    def test_non_drum_stems_unchanged(self, tmp_path):
+        """Vocals, bass, other should pass through unchanged for ballad_to_rock."""
+        separation = _make_mock_separation(str(tmp_path))
+        result = apply_stem_fx(separation.stem_paths, "ballad_to_rock", str(tmp_path))
+        for name in ["vocals", "bass", "other"]:
+            assert result[name] == separation.stem_paths[name]
+
+    def test_unknown_preset_no_op(self, tmp_path):
+        """A preset with no stem FX returns all paths unchanged."""
+        separation = _make_mock_separation(str(tmp_path))
+        result = apply_stem_fx(separation.stem_paths, "nonexistent_preset", str(tmp_path))
+        for name in separation.stem_paths:
+            assert result[name] == separation.stem_paths[name]
 
 
 class TestTimeStretch:

@@ -23,9 +23,9 @@
     - [x] Stem-aligned time-stretch
         - [x] Implement tempo adjustment per-stem
         - [x] Preserve vocal pitch during stretch
-    - [ ] Improved drum energy for rock presets
-        - [ ] Apply heavier compression + saturation to drum stem
-        - [ ] Add parallel compression for punch
+    - [x] Improved drum energy for rock presets
+        - [x] Apply heavier compression + saturation to drum stem
+        - [x] Add parallel compression for punch
     - [ ] Better low-end control (bass)
         - [ ] Sidechain-style ducking on bass stem
         - [ ] Sub-bass enhancement filter
@@ -79,6 +79,7 @@
 ---
 
 ## 📝 Activity Log
+- `2026-03-08` **Improved drum energy for rock presets.** Created `pipeline/stem_fx.py` with per-stem pedalboard chains, parallel compression (60% wet), aggressive drum chain (6:1 comp, 12dB drive, 5kHz snap), wired as Stage 3c.
 - `2026-03-08` **Stem-aligned time-stretch implemented.** Created `pipeline/time_stretch.py` (pyrubberband wrapper with vocal formant preservation), updated pipeline to 7-stage flow with remix, added per-stem mock-based tests.
 - `2026-03-02` **Stem separation integrated.** Created `pipeline/separate.py` (Demucs htdemucs wrapper), updated pipeline to 6-stage flow, added per-stem metadata to `AnalysisResult`, S3 stem upload in `main.py`, mock-based tests.
 - `2026-02-21` **Phase 2 sprint board created.** Migrated from Phase 1 (completed). Archived Phase 1 tasks to `03-history.md`. Exploded Phase 2 roadmap items into technical sub-tasks.
