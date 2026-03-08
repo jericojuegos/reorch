@@ -89,6 +89,29 @@ class TestNormalize:
         measured = meter.integrated_loudness(samples)
         assert abs(measured - (-14.0)) < 1.5, f"LUFS {measured} not close to -14"
 
+    def test_true_peak_limiter_prevents_clipping(self, tmp_path):
+        """Audio that would clip after LUFS boost must be caught by the true peak limiter."""
+        import math
+
+        # Write a quiet sine wave — normalize will boost it, potentially clipping
+        sr = 44100
+        duration = 3.0
+        t = np.linspace(0, duration, int(sr * duration), endpoint=False)
+        # Very quiet input: -40 dBFS amplitude
+        amplitude = 10 ** (-40.0 / 20.0)
+        sine = amplitude * np.sin(2 * np.pi * 440 * t)
+        stereo = np.column_stack([sine, sine])
+        src = str(tmp_path / "quiet.wav")
+        sf.write(src, stereo, sr, subtype="PCM_16")
+
+        result = normalize(src, str(tmp_path))
+        assert os.path.exists(result)
+
+        # The limiter must ensure no sample exceeds -1 dBFS (≈ 0.891)
+        samples, _ = sf.read(result, dtype="float64")
+        true_peak_db = 20 * math.log10(np.max(np.abs(samples)) + 1e-10)
+        assert true_peak_db <= -0.9, f"True peak {true_peak_db:.2f} dBFS exceeds -1.0 dBTP limit"
+
 
 class TestRender:
     def test_produces_wav_and_mp3(self, tmp_path):
