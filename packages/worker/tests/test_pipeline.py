@@ -22,6 +22,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from pipeline.canonicalize import canonicalize
 from pipeline.analyze import analyze, analyze_stems
 from pipeline.separate import SeparationResult
+from pipeline.time_stretch import time_stretch_stems, remix_stems
 from pipeline.normalize import normalize
 from pipeline.transform import transform
 from pipeline.render import render
@@ -155,6 +156,62 @@ class TestAnalyzeStems:
             assert meta["rms"][name] > 0
 
 
+class TestTimeStretch:
+    """Tests for the time-stretch stage."""
+
+    def test_no_op_when_ratio_near_one(self, tmp_path):
+        """When original_bpm ≈ target_bpm, stem paths are returned unchanged."""
+        separation = _make_mock_separation(str(tmp_path))
+        result = time_stretch_stems(
+            separation.stem_paths,
+            original_bpm=120.0,
+            target_bpm=120.3,  # within 0.5% tolerance
+            work_dir=str(tmp_path),
+        )
+        # Paths should be identical (no stretching occurred)
+        for name in separation.stem_paths:
+            assert result[name] == separation.stem_paths[name]
+
+    @patch("pipeline.time_stretch.pyrb")
+    def test_stretch_changes_duration(self, mock_pyrb, tmp_path):
+        """Stretching from 120→60 BPM should call pyrb with ratio 0.5."""
+        separation = _make_mock_separation(str(tmp_path), duration=2.0)
+
+        # Make pyrb.time_stretch return a doubled-length array
+        def fake_stretch(samples, sr, ratio, rbargs=None):
+            new_len = int(len(samples) / ratio)
+            if samples.ndim > 1:
+                return np.zeros((new_len, samples.shape[1]), dtype="float32")
+            return np.zeros(new_len, dtype="float32")
+
+        mock_pyrb.time_stretch.side_effect = fake_stretch
+
+        result = time_stretch_stems(
+            separation.stem_paths,
+            original_bpm=120.0,
+            target_bpm=60.0,
+            work_dir=str(tmp_path),
+        )
+
+        # All 4 stems should have been stretched
+        assert mock_pyrb.time_stretch.call_count == 4
+        for stem_path in result.values():
+            assert os.path.exists(stem_path)
+            info = sf.info(stem_path)
+            # 2s original at 2x stretch → ~4s
+            assert info.duration > 3.5
+
+    def test_remix_sums_stems(self, tmp_path):
+        """remix_stems produces a single WAV matching the longest stem."""
+        separation = _make_mock_separation(str(tmp_path), duration=2.0)
+        remixed = remix_stems(separation.stem_paths, str(tmp_path))
+        assert os.path.exists(remixed)
+        info = sf.info(remixed)
+        assert info.samplerate == 44100
+        assert info.channels == 2
+        assert abs(info.duration - 2.0) < 0.1
+
+
 class TestFullPipeline:
     @patch("pipeline.separate")
     def test_end_to_end(self, mock_separate_fn, tmp_path):
@@ -198,4 +255,42 @@ class TestFullPipeline:
         # Check progress callbacks fired
         assert len(progress_log) > 0
         assert progress_log[-1][0] == 100
+
+    @patch("pipeline.time_stretch.pyrb")
+    @patch("pipeline.separate")
+    def test_end_to_end_with_target_bpm(self, mock_separate_fn, mock_pyrb, tmp_path):
+        """Full pipeline with target_bpm triggers time-stretch."""
+        src = create_test_wav(str(tmp_path / "input.wav"), duration=3.0)
+        output_dir = str(tmp_path / "final_bpm")
+
+        mock_separation = _make_mock_separation(str(tmp_path))
+        mock_separate_fn.return_value = mock_separation
+
+        # pyrb.time_stretch returns same-length array (ratio ≈ 1 in practice)
+        def fake_stretch(samples, sr, ratio, rbargs=None):
+            return samples
+
+        mock_pyrb.time_stretch.side_effect = fake_stretch
+
+        progress_log = []
+
+        async def on_progress(pct, msg):
+            progress_log.append((pct, msg))
+
+        result = asyncio.get_event_loop().run_until_complete(
+            run_pipeline(
+                input_path=src,
+                output_dir=output_dir,
+                preset="ballad_to_rock",
+                target_bpm=90.0,
+                on_progress=on_progress,
+            )
+        )
+
+        assert os.path.exists(result.wav_path)
+        assert os.path.exists(result.mp3_path)
+        assert mock_pyrb.time_stretch.call_count == 4
+        # Progress should include time-stretch messages
+        stretch_msgs = [msg for _, msg in progress_log if "Time-stretch" in msg or "stretch" in msg.lower()]
+        assert len(stretch_msgs) > 0
 

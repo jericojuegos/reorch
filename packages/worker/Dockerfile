@@ -2,9 +2,9 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install FFmpeg for audio format conversion
+# Install FFmpeg for audio format conversion and Rubber Band for time-stretching
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends ffmpeg && \
+    apt-get install -y --no-install-recommends ffmpeg rubberband-cli && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy project files

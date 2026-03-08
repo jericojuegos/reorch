@@ -19,6 +19,7 @@ dependencies = [
     "demucs>=4.0.0",
     "torch>=2.0.0",
     "torchaudio>=2.0.0",
+    "pyrubberband>=0.4.0",
     "audioop-lts>=0.2.1; python_version>='3.13'",
 ]
 
