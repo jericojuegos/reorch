@@ -172,11 +172,67 @@ class TestStemFx:
         assert info.channels == 2
 
     def test_non_drum_stems_unchanged(self, tmp_path):
-        """Vocals, bass, other should pass through unchanged for ballad_to_rock."""
+        """Vocals and other should pass through unchanged for ballad_to_rock."""
         separation = _make_mock_separation(str(tmp_path))
         result = apply_stem_fx(separation.stem_paths, "ballad_to_rock", str(tmp_path))
-        for name in ["vocals", "bass", "other"]:
+        for name in ["vocals", "other"]:
             assert result[name] == separation.stem_paths[name]
+
+    def test_bass_stem_is_processed(self, tmp_path):
+        """ballad_to_rock should process the bass stem (EQ + compression + sidechain)."""
+        separation = _make_mock_separation(str(tmp_path))
+        result = apply_stem_fx(separation.stem_paths, "ballad_to_rock", str(tmp_path))
+        # Bass path should be different (processed + ducked)
+        assert result["bass"] != separation.stem_paths["bass"]
+        assert os.path.exists(result["bass"])
+        info = sf.info(result["bass"])
+        assert info.samplerate == 44100
+        assert info.channels == 2
+
+    def test_sidechain_reduces_bass_during_drum_hits(self, tmp_path):
+        """Sidechain ducking should reduce bass RMS when drums are loud."""
+        stems_dir = os.path.join(str(tmp_path), "stems")
+        os.makedirs(stems_dir, exist_ok=True)
+        sr = 44100
+        duration = 2.0
+        t = np.linspace(0, duration, int(sr * duration), endpoint=False)
+
+        # Loud drum stem (high-amplitude transient)
+        drum_signal = 0.8 * np.sin(2 * np.pi * 100 * t)
+        drum_stereo = np.column_stack([drum_signal, drum_signal])
+        drum_path = os.path.join(stems_dir, "drums.wav")
+        sf.write(drum_path, drum_stereo, sr, subtype="PCM_16")
+
+        # Constant bass stem
+        bass_signal = 0.5 * np.sin(2 * np.pi * 60 * t)
+        bass_stereo = np.column_stack([bass_signal, bass_signal])
+        bass_path = os.path.join(stems_dir, "bass.wav")
+        sf.write(bass_path, bass_stereo, sr, subtype="PCM_16")
+
+        # Silent vocals/other
+        silence = np.zeros((int(sr * duration), 2), dtype="float32")
+        vocals_path = os.path.join(stems_dir, "vocals.wav")
+        other_path = os.path.join(stems_dir, "other.wav")
+        sf.write(vocals_path, silence, sr, subtype="PCM_16")
+        sf.write(other_path, silence, sr, subtype="PCM_16")
+
+        stem_paths = {
+            "drums": drum_path, "bass": bass_path,
+            "vocals": vocals_path, "other": other_path,
+        }
+
+        result = apply_stem_fx(stem_paths, "ballad_to_rock", str(tmp_path))
+
+        # Read the processed bass and compute RMS
+        processed_bass, _ = sf.read(result["bass"], dtype="float32")
+        original_bass, _ = sf.read(bass_path, dtype="float32")
+        rms_processed = float(np.sqrt(np.mean(processed_bass ** 2)))
+        rms_original = float(np.sqrt(np.mean(original_bass ** 2)))
+
+        # Ducking should have reduced the bass RMS
+        assert rms_processed < rms_original, (
+            f"Expected ducked RMS ({rms_processed:.4f}) < original RMS ({rms_original:.4f})"
+        )
 
     def test_unknown_preset_no_op(self, tmp_path):
         """A preset with no stem FX returns all paths unchanged."""
