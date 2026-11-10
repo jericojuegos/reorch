@@ -46,7 +46,7 @@ Run these commands after every task before marking `[x]`:
 | Where do files live & how does the audio pipeline work? | [`docs/foundation/architecture.md`](docs/foundation/architecture.md) |
 | What packages, conventions & stack layers exist? | [`docs/foundation/tech-stack.md`](docs/foundation/tech-stack.md) |
 | How do we execute tasks, waves & cross-model reviews? | [`.agents/rules/execution-protocol.md`](.agents/rules/execution-protocol.md) |
-| What are the Python FastAPI & Next.js stack rules? | [`.agents/rules/stack-rules.md`](.agents/rules/stack-rules.md) & [`.agents/rules/stack-nextjs-supabase.md`](.agents/rules/stack-nextjs-supabase.md) |
+| What are the Python FastAPI & Next.js stack rules? | [`.agents/rules/stack-rules.md`](.agents/rules/stack-rules.md) |
 
 ---
 
